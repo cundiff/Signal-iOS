@@ -197,6 +197,8 @@ typedef enum : NSUInteger {
 
 @property (nonatomic) CGFloat scrollDistanceToBottomSnapshot;
 
+@property (nonatomic) int isFlash;
+
 @end
 
 #pragma mark -
@@ -2606,6 +2608,10 @@ typedef enum : NSUInteger {
         picker.mediaTypes = @[ (__bridge NSString *)kUTTypeImage, (__bridge NSString *)kUTTypeMovie ];
         picker.allowsEditing = NO;
         picker.delegate = self;
+
+        if (self.isFlash) {
+            picker.cameraFlashMode = self.isFlash;
+        }
         
         [self dismissKeyBoard];
         [self presentViewController:picker animated:YES completion:nil];
@@ -2664,6 +2670,7 @@ typedef enum : NSUInteger {
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
+    self.isFlash = picker.cameraFlashMode;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -2737,6 +2744,8 @@ typedef enum : NSUInteger {
         // Static Image captured from camera
 
         UIImage *imageFromCamera = [info[UIImagePickerControllerOriginalImage] normalizedImage];
+        
+        self.isFlash = picker.cameraFlashMode;
 
         [self dismissViewControllerAnimated:YES
                                  completion:^{
